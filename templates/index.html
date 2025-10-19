@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Image Data Hider</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-4 text-center">Hide Message in Image</h1>
+    <form action="/encode" method="POST" enctype="multipart/form-data" class="space-y-4">
+      <input type="file" name="image" required class="w-full border rounded p-2">
+      <textarea name="message" placeholder="Enter your secret message..." class="w-full border rounded p-2 h-24"></textarea>
+      <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Hide Message</button>
+    </form>
+
+    {% if encoded_image %}
+      <div class="mt-6 text-center">
+        <h2 class="text-lg font-semibold">Encoded Image:</h2>
+        <img src="{{ encoded_image }}" alt="Encoded" class="mt-2 mx-auto rounded-lg shadow">
+        <div class="mt-3 space-x-3">
+          <a href="{{ encoded_image }}" download class="bg-green-500 text-white px-3 py-2 rounded">Download</a>
+          <a href="{{ whatsapp_link }}" target="_blank" class="bg-indigo-500 text-white px-3 py-2 rounded">Share on WhatsApp</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>
