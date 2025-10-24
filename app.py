@@ -5,6 +5,7 @@ import io, os
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = "static/encoded"
 
+# ----------------- ENCODE -----------------
 def encode_message(img, message):
     encoded = img.copy()
     width, height = img.size
@@ -24,6 +25,28 @@ def encode_message(img, message):
                 return encoded
     return encoded
 
+# ----------------- DECODE -----------------
+def decode_message(img):
+    binary_data = ""
+    width, height = img.size
+
+    for x in range(width):
+        for y in range(height):
+            pixel = img.getpixel((x, y))
+            for n in range(3):
+                binary_data += str(pixel[n] & 1)
+
+    # Split into bytes (8 bits each)
+    message = ""
+    for i in range(0, len(binary_data), 8):
+        byte = binary_data[i:i+8]
+        char = chr(int(byte, 2))
+        message += char
+        if message[-2:] == "%%":  # end marker
+            return message[:-2]
+    return message
+
+# ----------------- ROUTES -----------------
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -37,15 +60,24 @@ def encode():
     message = request.form['message']
 
     encoded_img = encode_message(image, message)
+    os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
     output_path = os.path.join(app.config["UPLOAD_FOLDER"], "encoded.png")
-    os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)  # fixed
-
     encoded_img.save(output_path)
 
     whatsapp_link = f"https://api.whatsapp.com/send?text=Check+this+secret+image:+{request.url_root}{output_path}"
 
     return render_template("index.html", encoded_image=output_path, whatsapp_link=whatsapp_link)
 
+@app.route('/decode', methods=['POST'])
+def decode():
+    if 'image' not in request.files:
+        return "No image uploaded", 400
 
+    image = Image.open(request.files['image'])
+    message = decode_message(image)
+
+    return render_template('index.html', decoded_message=message)
+
+# ----------------- RUN -----------------
 if __name__ == '__main__':
     app.run(debug=True)

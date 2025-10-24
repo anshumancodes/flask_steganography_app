@@ -6,24 +6,51 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-    <h1 class="text-2xl font-bold mb-4 text-center">Hide Message in Image</h1>
-    <form action="/encode" method="POST" enctype="multipart/form-data" class="space-y-4">
-      <input type="file" name="image" required class="w-full border rounded p-2">
-      <textarea name="message" placeholder="Enter your secret message..." class="w-full border rounded p-2 h-24"></textarea>
-      <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Hide Message</button>
-    </form>
+  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md space-y-8">
+    <!-- Title -->
+    <h1 class="text-3xl font-extrabold mb-4 text-center text-blue-600">Image Data Hider</h1>
 
-    {% if encoded_image %}
-      <div class="mt-6 text-center">
-        <h2 class="text-lg font-semibold">Encoded Image:</h2>
-        <img src="{{ encoded_image }}" alt="Encoded" class="mt-2 mx-auto rounded-lg shadow">
-        <div class="mt-3 space-x-3">
-          <a href="{{ encoded_image }}" download class="bg-green-500 text-white px-3 py-2 rounded">Download</a>
-          <a href="{{ whatsapp_link }}" target="_blank" class="bg-indigo-500 text-white px-3 py-2 rounded">Share on WhatsApp</a>
+    <!-- ENCODE SECTION -->
+    <div>
+      <h2 class="text-xl font-semibold mb-3 text-gray-700 text-center">🔒 Hide Message in Image</h2>
+      <form action="/encode" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <input type="file" name="image" required class="w-full border border-gray-300 rounded p-2 focus:ring focus:ring-blue-200">
+        <textarea name="message" placeholder="Enter your secret message..." required class="w-full border border-gray-300 rounded p-2 h-24 focus:ring focus:ring-blue-200"></textarea>
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">Hide Message</button>
+      </form>
+
+      {% if encoded_image %}
+        <div class="mt-6 text-center">
+          <h3 class="text-lg font-semibold text-gray-700">✅ Encoded Image:</h3>
+          <img src="{{ encoded_image }}" alt="Encoded" class="mt-3 mx-auto rounded-lg shadow-md border">
+          <div class="mt-4 flex justify-center space-x-3">
+            <a href="{{ encoded_image }}" download class="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600 transition">Download</a>
+            <a href="{{ whatsapp_link }}" target="_blank" class="bg-indigo-500 text-white px-3 py-2 rounded hover:bg-indigo-600 transition">Share on WhatsApp</a>
+          </div>
         </div>
-      </div>
-    {% endif %}
+      {% endif %}
+    </div>
+
+    <hr class="border-t border-gray-300">
+
+    <!-- DECODE SECTION -->
+    <div>
+      <h2 class="text-xl font-semibold mb-3 text-gray-700 text-center">🕵️ Decode Hidden Message</h2>
+      <form action="/decode" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <input type="file" name="image" required class="w-full border border-gray-300 rounded p-2 focus:ring focus:ring-green-200">
+        <button type="submit" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">Reveal Message</button>
+      </form>
+
+      {% if decoded_message %}
+        <div class="mt-6 text-center">
+          <h3 class="text-lg font-semibold text-gray-700">💬 Decoded Message:</h3>
+          <p class="mt-3 bg-gray-100 border border-gray-300 p-3 rounded text-gray-800 break-words">{{ decoded_message }}</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <p class="text-center text-gray-500 text-sm mt-6">Built with ❤️ using Flask & TailwindCSS</p>
   </div>
 </body>
 </html>
