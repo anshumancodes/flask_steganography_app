@@ -23,10 +23,6 @@ flask_steganography_app/
 
 ├── templates/ # HTML templates for the app
 
-│ ├── encode.html
-
-│ └── decode.html
-
 ├── static/
 
 │ └── encoded/ # Folder for generated encoded images
